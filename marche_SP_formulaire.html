@@ -6,7 +6,6 @@
   <title>Marche au profit de la sclérose en plaques – Programme ETNA</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <style>
     :root {
       --uni-bleu: #003478;
@@ -14,7 +13,6 @@
       --uni-bleu-mid: #ccd9ee;
       --uni-jaune: #FFD100;
       --uni-orange: #FF6A00;
-      --uni-orange-light: #fff3eb;
       --radius-md: 8px;
       --radius-lg: 12px;
     }
@@ -25,12 +23,7 @@
       min-height: 100vh;
       padding: 1.5rem 1rem 3rem;
     }
-    .wrap {
-      max-width: 580px;
-      margin: 0 auto;
-    }
-
-    /* HERO */
+    .wrap { max-width: 580px; margin: 0 auto; }
     .hero {
       text-align: center;
       padding: 1.75rem 1.25rem 1.25rem;
@@ -72,8 +65,6 @@
       letter-spacing: 0.06em;
       margin-bottom: 14px;
     }
-
-    /* CARDS */
     .form-card {
       background: #fff;
       border-radius: var(--radius-lg);
@@ -92,8 +83,6 @@
       border-bottom: 2px solid var(--uni-jaune);
       margin-bottom: 16px;
     }
-
-    /* FORM ELEMENTS */
     label.field-label {
       display: block;
       font-size: 13px;
@@ -112,7 +101,6 @@
       background: #fff;
       outline: none;
       transition: border-color 0.15s, box-shadow 0.15s;
-      margin-bottom: 0;
     }
     input[type="text"]:focus, input[type="date"]:focus {
       border-color: var(--uni-bleu);
@@ -126,8 +114,6 @@
     }
     .field { margin-bottom: 12px; }
     .field:last-child { margin-bottom: 0; }
-
-    /* RADIO DIAGNOSTIC */
     .diag-label {
       font-size: 13px;
       font-weight: 500;
@@ -159,8 +145,6 @@
       flex-shrink: 0;
     }
     .radio-option span { font-size: 14px; color: #1a1a2e; }
-
-    /* BOUTONS */
     .btn-submit {
       width: 100%;
       background: var(--uni-orange);
@@ -177,28 +161,7 @@
     }
     .btn-submit:hover { background: #e05a00; }
     .btn-submit:active { transform: scale(0.99); }
-
-    .btn-secondary {
-      width: 100%;
-      background: #fff;
-      color: var(--uni-bleu);
-      border: 0.5px solid #c5cfe0;
-      border-radius: var(--radius-md);
-      padding: 11px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      margin-top: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      transition: background 0.1s, border-color 0.1s;
-    }
-    .btn-secondary:hover { background: var(--uni-bleu-light); border-color: var(--uni-bleu); }
-
-    /* TOAST */
+    .btn-submit:disabled { background: #ccc; cursor: not-allowed; }
     #toast {
       display: none;
       border-radius: var(--radius-md);
@@ -208,22 +171,50 @@
       text-align: center;
       font-weight: 500;
     }
-
-    /* STATS */
-    .counter {
+    .succes-view {
+      display: none;
       text-align: center;
-      font-size: 13px;
-      color: #666;
-      margin: 0.5rem 0;
+      background: #fff;
+      border-radius: var(--radius-lg);
+      border: 0.5px solid #dde3ee;
+      padding: 2rem 1.25rem;
+      margin-bottom: 1rem;
     }
-    .counter span {
-      font-weight: 500;
+    .succes-icon {
+      width: 64px; height: 64px;
+      background: var(--uni-bleu);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+      font-size: 30px;
+      color: var(--uni-jaune);
+    }
+    .succes-view h2 {
+      font-family: 'Lora', serif;
+      font-size: 22px;
       color: var(--uni-bleu);
-      font-size: 28px;
-      display: block;
+      margin-bottom: 8px;
     }
-
-    /* FOOTER */
+    .succes-view p {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+    .btn-nouveau {
+      background: var(--uni-bleu);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 12px 28px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .btn-nouveau:hover { background: #002460; }
     .footer {
       text-align: center;
       margin-top: 1.5rem;
@@ -236,11 +227,10 @@
       cursor: pointer;
       font-family: 'DM Sans', sans-serif;
       font-size: 12px;
-      color: #999;
+      color: #bbb;
       padding: 4px 8px;
     }
     .btn-admin:hover { color: var(--uni-bleu); }
-
     @media (max-width: 480px) {
       .row { grid-template-columns: 1fr; }
       .radio-group { grid-template-columns: 1fr; }
@@ -259,7 +249,6 @@
 
     <div id="toast"></div>
 
-    <!-- FORMULAIRE -->
     <div id="formView">
       <div class="form-card">
         <div class="section-title">Informations personnelles</div>
@@ -298,27 +287,24 @@
         </div>
       </div>
 
-      <button class="btn-submit" onclick="soumettre()">✓ &nbsp;Soumettre ma participation</button>
+      <button class="btn-submit" id="btnSoumettre" onclick="soumettre()">✓ &nbsp;Soumettre ma participation</button>
     </div>
 
-    <!-- GESTION ADMIN -->
-    <div id="statsView" style="display:none;">
-      <div class="form-card" style="text-align:center;">
-        <div class="section-title">Participants enregistrés</div>
-        <div class="counter">Total<span id="totalCount">0</span></div>
-      </div>
-      <button class="btn-submit" onclick="exporterExcel()">⬇ &nbsp;Télécharger le fichier Excel</button>
-      <button class="btn-secondary" onclick="showForm()">+ &nbsp;Ajouter un participant</button>
+    <div class="succes-view" id="succesView">
+      <div class="succes-icon">✓</div>
+      <h2>Merci !</h2>
+      <p id="succesMsg">Votre participation a été enregistrée avec succès.</p>
+      <button class="btn-nouveau" onclick="nouvelleInscription()">Inscrire un autre participant</button>
     </div>
 
     <div class="footer">
-      <button class="btn-admin" onclick="toggleAdmin()">⚙ Gérer les données</button>
+      <button class="btn-admin" onclick="window.open('https://sheets.google.com', '_blank')">⚙ Voir les données</button>
     </div>
 
   </div>
 
   <script>
-    const STORAGE_KEY = 'marche_sp_2025';
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby5yKCCSAnroNlyOff5dfmqryNLx-L6LnDkoz_zYqQfhaqMrPqBeb0A-JmXZLNMkNpN/exec';
     let diagSelectionne = '';
 
     function selectDiag(val, el) {
@@ -327,27 +313,16 @@
       el.classList.add('selected');
     }
 
-    function chargerDonnees() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        return raw ? JSON.parse(raw) : [];
-      } catch { return []; }
-    }
-
-    function sauvegarder(data) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    }
-
     function showToast(msg, ok) {
       const t = document.getElementById('toast');
       t.textContent = msg;
       t.style.display = 'block';
       t.style.background = ok ? '#003478' : '#c0392b';
       t.style.color = ok ? '#FFD100' : '#fff';
-      setTimeout(() => { t.style.display = 'none'; }, 3500);
+      setTimeout(() => { t.style.display = 'none'; }, 4000);
     }
 
-    function soumettre() {
+    async function soumettre() {
       const nom = document.getElementById('nom').value.trim();
       const prenom = document.getElementById('prenom').value.trim();
       const ddn = document.getElementById('ddn').value;
@@ -356,16 +331,38 @@
       if (!nom || !prenom || !ddn) { showToast('Veuillez remplir les champs obligatoires (*)', false); return; }
       if (!diagSelectionne) { showToast('Veuillez sélectionner une option pour le diagnostic', false); return; }
 
-      const participants = chargerDonnees();
-      participants.push({
+      const btn = document.getElementById('btnSoumettre');
+      btn.disabled = true;
+      btn.textContent = 'Envoi en cours...';
+
+      const donnees = {
         nom, prenom,
         date_naissance: ddn,
         diagnostique_sp: diagSelectionne,
         neurologue: neuro || '—',
         horodatage: new Date().toLocaleString('fr-CA')
-      });
-      sauvegarder(participants);
+      };
 
+      try {
+        await fetch(SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(donnees)
+        });
+
+        document.getElementById('formView').style.display = 'none';
+        document.getElementById('succesMsg').textContent = prenom + ' ' + nom + ', votre participation a été enregistrée avec succès. Merci !';
+        document.getElementById('succesView').style.display = 'block';
+
+      } catch (err) {
+        showToast('Erreur de connexion. Vérifiez votre internet et réessayez.', false);
+        btn.disabled = false;
+        btn.textContent = '✓  Soumettre ma participation';
+      }
+    }
+
+    function nouvelleInscription() {
       document.getElementById('nom').value = '';
       document.getElementById('prenom').value = '';
       document.getElementById('ddn').value = '';
@@ -373,40 +370,10 @@
       diagSelectionne = '';
       document.querySelectorAll('.radio-option').forEach(o => o.classList.remove('selected'));
       document.querySelectorAll('input[name="diag"]').forEach(r => r.checked = false);
-
-      showToast('✓ ' + prenom + ' ' + nom + ' enregistré(e) !', true);
-      mettreAJourCompteur(participants.length);
-    }
-
-    function mettreAJourCompteur(n) {
-      if (n === undefined) n = chargerDonnees().length;
-      document.getElementById('totalCount').textContent = n;
-    }
-
-    function exporterExcel() {
-      const participants = chargerDonnees();
-      if (!participants.length) { showToast('Aucun participant enregistré.', false); return; }
-      const entetes = ['Nom', 'Prénom', 'Date de naissance', 'Diagnostique SP', 'Neurologue', 'Horodatage'];
-      const lignes = participants.map(p => [p.nom, p.prenom, p.date_naissance, p.diagnostique_sp, p.neurologue, p.horodatage]);
-      const wb = XLSX.utils.book_new();
-      const ws = XLSX.utils.aoa_to_sheet([entetes, ...lignes]);
-      ws['!cols'] = [14, 14, 16, 16, 22, 22].map(w => ({ wch: w }));
-      XLSX.utils.book_append_sheet(wb, ws, 'Participants');
-      XLSX.writeFile(wb, 'marche_SP_31mai_2025.xlsx');
-      showToast('Fichier Excel téléchargé !', true);
-    }
-
-    let adminVisible = false;
-    function toggleAdmin() {
-      adminVisible = !adminVisible;
-      document.getElementById('statsView').style.display = adminVisible ? 'block' : 'none';
-      document.getElementById('formView').style.display = adminVisible ? 'none' : 'block';
-      if (adminVisible) mettreAJourCompteur();
-    }
-
-    function showForm() {
-      adminVisible = false;
-      document.getElementById('statsView').style.display = 'none';
+      const btn = document.getElementById('btnSoumettre');
+      btn.disabled = false;
+      btn.textContent = '✓  Soumettre ma participation';
+      document.getElementById('succesView').style.display = 'none';
       document.getElementById('formView').style.display = 'block';
     }
   </script>
