@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Marche au profit de la sclérose en plaques – Programme ETNA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    :root {
+      --uni-bleu: #003478;
+      --uni-bleu-light: #e6ecf5;
+      --uni-bleu-mid: #ccd9ee;
+      --uni-jaune: #FFD100;
+      --uni-orange: #FF6A00;
+      --uni-orange-light: #fff3eb;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #f4f6fb;
+      min-height: 100vh;
+      padding: 1.5rem 1rem 3rem;
+    }
+    .wrap {
+      max-width: 580px;
+      margin: 0 auto;
+    }
+
+    /* HERO */
+    .hero {
+      text-align: center;
+      padding: 1.75rem 1.25rem 1.25rem;
+      border-radius: var(--radius-lg);
+      background: var(--uni-bleu);
+      margin-bottom: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-stripe {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, var(--uni-jaune) 50%, var(--uni-orange) 50%);
+    }
+    .hero-badge {
+      display: inline-block;
+      background: var(--uni-jaune);
+      color: var(--uni-bleu);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+    }
+    .hero h1 {
+      font-family: 'Lora', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 6px;
+      line-height: 1.35;
+    }
+    .hero p {
+      font-size: 13px;
+      color: var(--uni-jaune);
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      margin-bottom: 14px;
+    }
+
+    /* CARDS */
+    .form-card {
+      background: #fff;
+      border-radius: var(--radius-lg);
+      border: 0.5px solid #dde3ee;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+    }
+    .section-title {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.07em;
+      color: var(--uni-bleu);
+      text-transform: uppercase;
+      display: inline-block;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--uni-jaune);
+      margin-bottom: 16px;
+    }
+
+    /* FORM ELEMENTS */
+    label.field-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: #555;
+      margin-bottom: 6px;
+    }
+    input[type="text"], input[type="date"] {
+      width: 100%;
+      border: 0.5px solid #c5cfe0;
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      color: #1a1a2e;
+      background: #fff;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      margin-bottom: 0;
+    }
+    input[type="text"]:focus, input[type="date"]:focus {
+      border-color: var(--uni-bleu);
+      box-shadow: 0 0 0 3px var(--uni-bleu-mid);
+    }
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .field { margin-bottom: 12px; }
+    .field:last-child { margin-bottom: 0; }
+
+    /* RADIO DIAGNOSTIC */
+    .diag-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #555;
+      margin-bottom: 8px;
+    }
+    .radio-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .radio-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: var(--radius-md);
+      border: 0.5px solid #dde3ee;
+      cursor: pointer;
+      transition: background 0.1s, border-color 0.1s;
+    }
+    .radio-option:hover { background: var(--uni-bleu-light); border-color: var(--uni-bleu); }
+    .radio-option.selected { background: var(--uni-bleu-light); border-color: var(--uni-bleu); }
+    .radio-option input[type="radio"] {
+      width: 16px; height: 16px;
+      accent-color: var(--uni-bleu);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .radio-option span { font-size: 14px; color: #1a1a2e; }
+
+    /* BOUTONS */
+    .btn-submit {
+      width: 100%;
+      background: var(--uni-orange);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      margin-top: 0.5rem;
+    }
+    .btn-submit:hover { background: #e05a00; }
+    .btn-submit:active { transform: scale(0.99); }
+
+    .btn-secondary {
+      width: 100%;
+      background: #fff;
+      color: var(--uni-bleu);
+      border: 0.5px solid #c5cfe0;
+      border-radius: var(--radius-md);
+      padding: 11px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background 0.1s, border-color 0.1s;
+    }
+    .btn-secondary:hover { background: var(--uni-bleu-light); border-color: var(--uni-bleu); }
+
+    /* TOAST */
+    #toast {
+      display: none;
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      font-size: 14px;
+      margin-bottom: 1rem;
+      text-align: center;
+      font-weight: 500;
+    }
+
+    /* STATS */
+    .counter {
+      text-align: center;
+      font-size: 13px;
+      color: #666;
+      margin: 0.5rem 0;
+    }
+    .counter span {
+      font-weight: 500;
+      color: var(--uni-bleu);
+      font-size: 28px;
+      display: block;
+    }
+
+    /* FOOTER */
+    .footer {
+      text-align: center;
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 0.5px solid #dde3ee;
+    }
+    .btn-admin {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      color: #999;
+      padding: 4px 8px;
+    }
+    .btn-admin:hover { color: var(--uni-bleu); }
+
+    @media (max-width: 480px) {
+      .row { grid-template-columns: 1fr; }
+      .radio-group { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+
+    <div class="hero">
+      <div class="hero-badge">31 mai 2025</div>
+      <h1>Marche au profit de la<br>sclérose en plaques</h1>
+      <p>Programme ETNA</p>
+      <div class="hero-stripe"></div>
+    </div>
+
+    <div id="toast"></div>
+
+    <!-- FORMULAIRE -->
+    <div id="formView">
+      <div class="form-card">
+        <div class="section-title">Informations personnelles</div>
+        <div class="row">
+          <div class="field">
+            <label class="field-label">Nom *</label>
+            <input type="text" id="nom" placeholder="Dupont" />
+          </div>
+          <div class="field">
+            <label class="field-label">Prénom *</label>
+            <input type="text" id="prenom" placeholder="Marie" />
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Date de naissance *</label>
+          <input type="date" id="ddn" />
+        </div>
+      </div>
+
+      <div class="form-card">
+        <div class="section-title">Informations médicales</div>
+        <div class="diag-label">Avez-vous un diagnostic de sclérose en plaques ? *</div>
+        <div class="radio-group">
+          <label class="radio-option" id="opt-oui" onclick="selectDiag('Oui', this)">
+            <input type="radio" name="diag" value="Oui" />
+            <span>J'ai le diagnostic</span>
+          </label>
+          <label class="radio-option" id="opt-non" onclick="selectDiag('Non', this)">
+            <input type="radio" name="diag" value="Non" />
+            <span>Je n'ai pas le diagnostic</span>
+          </label>
+        </div>
+        <div class="field">
+          <label class="field-label">Nom de votre neurologue</label>
+          <input type="text" id="neurologue" placeholder="Dr. Tremblay" />
+        </div>
+      </div>
+
+      <button class="btn-submit" onclick="soumettre()">✓ &nbsp;Soumettre ma participation</button>
+    </div>
+
+    <!-- GESTION ADMIN -->
+    <div id="statsView" style="display:none;">
+      <div class="form-card" style="text-align:center;">
+        <div class="section-title">Participants enregistrés</div>
+        <div class="counter">Total<span id="totalCount">0</span></div>
+      </div>
+      <button class="btn-submit" onclick="exporterExcel()">⬇ &nbsp;Télécharger le fichier Excel</button>
+      <button class="btn-secondary" onclick="showForm()">+ &nbsp;Ajouter un participant</button>
+    </div>
+
+    <div class="footer">
+      <button class="btn-admin" onclick="toggleAdmin()">⚙ Gérer les données</button>
+    </div>
+
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'marche_sp_2025';
+    let diagSelectionne = '';
+
+    function selectDiag(val, el) {
+      diagSelectionne = val;
+      document.querySelectorAll('.radio-option').forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+
+    function chargerDonnees() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch { return []; }
+    }
+
+    function sauvegarder(data) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+
+    function showToast(msg, ok) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.style.display = 'block';
+      t.style.background = ok ? '#003478' : '#c0392b';
+      t.style.color = ok ? '#FFD100' : '#fff';
+      setTimeout(() => { t.style.display = 'none'; }, 3500);
+    }
+
+    function soumettre() {
+      const nom = document.getElementById('nom').value.trim();
+      const prenom = document.getElementById('prenom').value.trim();
+      const ddn = document.getElementById('ddn').value;
+      const neuro = document.getElementById('neurologue').value.trim();
+
+      if (!nom || !prenom || !ddn) { showToast('Veuillez remplir les champs obligatoires (*)', false); return; }
+      if (!diagSelectionne) { showToast('Veuillez sélectionner une option pour le diagnostic', false); return; }
+
+      const participants = chargerDonnees();
+      participants.push({
+        nom, prenom,
+        date_naissance: ddn,
+        diagnostique_sp: diagSelectionne,
+        neurologue: neuro || '—',
+        horodatage: new Date().toLocaleString('fr-CA')
+      });
+      sauvegarder(participants);
+
+      document.getElementById('nom').value = '';
+      document.getElementById('prenom').value = '';
+      document.getElementById('ddn').value = '';
+      document.getElementById('neurologue').value = '';
+      diagSelectionne = '';
+      document.querySelectorAll('.radio-option').forEach(o => o.classList.remove('selected'));
+      document.querySelectorAll('input[name="diag"]').forEach(r => r.checked = false);
+
+      showToast('✓ ' + prenom + ' ' + nom + ' enregistré(e) !', true);
+      mettreAJourCompteur(participants.length);
+    }
+
+    function mettreAJourCompteur(n) {
+      if (n === undefined) n = chargerDonnees().length;
+      document.getElementById('totalCount').textContent = n;
+    }
+
+    function exporterExcel() {
+      const participants = chargerDonnees();
+      if (!participants.length) { showToast('Aucun participant enregistré.', false); return; }
+      const entetes = ['Nom', 'Prénom', 'Date de naissance', 'Diagnostique SP', 'Neurologue', 'Horodatage'];
+      const lignes = participants.map(p => [p.nom, p.prenom, p.date_naissance, p.diagnostique_sp, p.neurologue, p.horodatage]);
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.aoa_to_sheet([entetes, ...lignes]);
+      ws['!cols'] = [14, 14, 16, 16, 22, 22].map(w => ({ wch: w }));
+      XLSX.utils.book_append_sheet(wb, ws, 'Participants');
+      XLSX.writeFile(wb, 'marche_SP_31mai_2025.xlsx');
+      showToast('Fichier Excel téléchargé !', true);
+    }
+
+    let adminVisible = false;
+    function toggleAdmin() {
+      adminVisible = !adminVisible;
+      document.getElementById('statsView').style.display = adminVisible ? 'block' : 'none';
+      document.getElementById('formView').style.display = adminVisible ? 'none' : 'block';
+      if (adminVisible) mettreAJourCompteur();
+    }
+
+    function showForm() {
+      adminVisible = false;
+      document.getElementById('statsView').style.display = 'none';
+      document.getElementById('formView').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
